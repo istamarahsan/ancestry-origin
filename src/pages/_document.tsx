@@ -1,5 +1,4 @@
 import { Html, Head, Main, NextScript } from "next/document"
-import { IM_Fell_English_SC } from "next/font/google"
 
 export default function Document() {
   return (
