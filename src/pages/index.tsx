@@ -1,6 +1,6 @@
 import { stat } from "fs"
 import { NextPage } from "next"
-import { useSession } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 
 type GeneratorLinkButtonProps = {
   text: string
@@ -38,7 +38,7 @@ const GeneratorLinkButton: React.FC<GeneratorLinkButtonProps> = ({
 }
 
 const Home: NextPage = () => {
-  const { data, status } = useSession()
+  const { update, data, status } = useSession()
 
   return (
     <>
@@ -57,11 +57,14 @@ const Home: NextPage = () => {
                 height: "50px",
               }}
             ></img>
-            {data.user.name}
+            <span>{data.user.name}</span>
+            <button onClick={() => signOut()} className="p-2">
+              Sign Out
+            </button>
           </div>
         ) : status === "unauthenticated" ? (
           <a href="/api/auth/signin" style={{ color: "black" }}>
-            Sign Up
+            Sign In
           </a>
         ) : (
           ""
