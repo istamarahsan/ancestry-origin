@@ -99,139 +99,152 @@ const CharacterNameGenerator: NextPage = () => {
 
   return (
     <main
-      className="grid min-h-screen grid-cols-3 items-center justify-center gap-5 px-3"
+      className="flex items-center justify-center"
       style={{
         background: "#F1DEC9",
         backgroundImage: "url(/noise-texture.png)",
       }}
     >
-      <div className="col-span-1 flex flex-col place-content-center gap-5">
-        <div
-          style={{
-            boxSizing: "border-box",
-            background: "#C8B6A6",
-            border: "5px solid #5E4529",
-            borderRadius: "20px",
-          }}
-        >
-          <Image
-            src={"/german.png"}
-            width={414}
-            height={432}
-            alt="character portrait"
-            className="w-full pt-10"
-            style={{}}
-          />
+      <div
+        className="my-4 grid min-h-screen grid-cols-3 items-center justify-center gap-5 px-3"
+        style={{
+          maxWidth: "900px",
+        }}
+      >
+        <div className="col-span-1 flex flex-col place-content-center gap-5">
+          <div
+            style={{
+              boxSizing: "border-box",
+              background: "#C8B6A6",
+              border: "5px solid #5E4529",
+              borderRadius: "20px",
+            }}
+          >
+            <Image
+              src={"/german.png"}
+              width={414}
+              height={432}
+              alt="character portrait"
+              className="w-full pt-10"
+              style={{}}
+            />
+          </div>
+          <button
+            className="px-1 py-2 font-serif"
+            style={{
+              boxSizing: "border-box",
+              background: "#C8B6A6",
+              border: "5px solid #5E4529",
+              borderRadius: "20px",
+            }}
+            onClick={() => {
+              const randomChoices = Math.floor(Math.random() * 10)
+              setGenResult({
+                ...genResult,
+                names: [
+                  getRandomResult(),
+                  getRandomResult(),
+                  getRandomResult(),
+                ],
+              })
+            }}
+          >
+            GENERATE NAME
+          </button>
+          <RadioGroup
+            value={genOptions.gender}
+            onChange={(value) =>
+              setGenOptions({
+                ...genOptions,
+                gender: value,
+              })
+            }
+            className="flex flex-col px-8 py-3"
+            style={{
+              boxSizing: "border-box",
+              background: "#C8B6A6",
+              border: "5px solid #5E4529",
+              borderRadius: "20px",
+            }}
+          >
+            <RadioGroup.Option value="random">
+              {({ checked }) => (
+                <GenderCheckBox checked={checked} label="RANDOM" />
+              )}
+            </RadioGroup.Option>
+            <RadioGroup.Option value="male">
+              {({ checked }) => (
+                <GenderCheckBox checked={checked} label="MALE" />
+              )}
+            </RadioGroup.Option>
+            <RadioGroup.Option value="female">
+              {({ checked }) => (
+                <GenderCheckBox checked={checked} label="FEMALE" />
+              )}
+            </RadioGroup.Option>
+          </RadioGroup>
         </div>
-        <button
-          className="px-1 py-2 font-serif"
-          style={{
-            boxSizing: "border-box",
-            background: "#C8B6A6",
-            border: "5px solid #5E4529",
-            borderRadius: "20px",
-          }}
-          onClick={() => {
-            const randomChoices = Math.floor(Math.random() * 10)
-            setGenResult({
-              ...genResult,
-              names: [getRandomResult(), getRandomResult(), getRandomResult()],
-            })
-          }}
-        >
-          GENERATE NAME
-        </button>
-        <RadioGroup
-          value={genOptions.gender}
-          onChange={(value) =>
-            setGenOptions({
-              ...genOptions,
-              gender: value,
-            })
-          }
-          className="flex flex-col px-8 py-3"
-          style={{
-            boxSizing: "border-box",
-            background: "#C8B6A6",
-            border: "5px solid #5E4529",
-            borderRadius: "20px",
-          }}
-        >
-          <RadioGroup.Option value="random">
-            {({ checked }) => (
-              <GenderCheckBox checked={checked} label="RANDOM" />
-            )}
-          </RadioGroup.Option>
-          <RadioGroup.Option value="male">
-            {({ checked }) => <GenderCheckBox checked={checked} label="MALE" />}
-          </RadioGroup.Option>
-          <RadioGroup.Option value="female">
-            {({ checked }) => (
-              <GenderCheckBox checked={checked} label="FEMALE" />
-            )}
-          </RadioGroup.Option>
-        </RadioGroup>
-      </div>
-      <div className="col-span-2 flex flex-col place-items-center">
-        <h1
-          className="text-center font-serif"
-          style={{
-            fontSize: "85px",
-          }}
-        >
-          CHARACTER NAME GENERATOR
-        </h1>
-        <div className="flex w-full flex-col px-10">
-          <div
-            className="my-2 p-3"
+        <div className="col-span-2 flex flex-col place-items-center">
+          <h1
+            className="text-center font-serif"
             style={{
-              boxSizing: "border-box",
-              background: "#C8B6A6",
-              border: "5px solid #5E4529",
-              borderRadius: "20px",
+              fontSize: "85px",
             }}
           >
-            <h4 className="font-serif" style={{ fontSize: "48px" }}>
-              {genResult.names?.[0][0] ?? "‎"}
-            </h4>
-            <h5 className="font-serif">
-              FIRST NAME MEANS:{" "}
-              {`${genResult.names?.[0][1]}, ${genResult.names?.[0][2]}`}
-            </h5>
-          </div>
-          <div
-            className="my-2 p-3"
-            style={{
-              boxSizing: "border-box",
-              background: "#C8B6A6",
-              border: "5px solid #5E4529",
-              borderRadius: "20px",
-            }}
-          >
-            <h4 className="font-serif" style={{ fontSize: "48px" }}>
-              {genResult.names?.[1][0] ?? "‎"}
-            </h4>
-            <h5 className="font-serif">
-              FIRST NAME MEANS:{" "}
-              {`${genResult.names?.[1][1]}, ${genResult.names?.[1][2]}`}
-            </h5>
-          </div>
-          <div
-            className="my-2 p-3"
-            style={{
-              boxSizing: "border-box",
-              background: "#C8B6A6",
-              border: "5px solid #5E4529",
-              borderRadius: "20px",
-            }}
-          >
-            <h4 className="font-serif" style={{ fontSize: "48px" }}>
-              {genResult.names?.[2][0] ?? "‎"}
-            </h4>
-            <h5 className="font-serif">
-              FIRST NAME MEANS:{" "}
-              {`${genResult.names?.[2][1]}, ${genResult.names?.[2][2]}`}
-            </h5>
+            CHARACTER NAME GENERATOR
+          </h1>
+          <div className="flex w-full flex-col px-10">
+            <div
+              className="my-2 p-3"
+              style={{
+                boxSizing: "border-box",
+                background: "#C8B6A6",
+                border: "5px solid #5E4529",
+                borderRadius: "20px",
+              }}
+            >
+              <h4 className="font-serif" style={{ fontSize: "48px" }}>
+                {genResult.names?.[0][0] ?? "‎"}
+              </h4>
+              <h5 className="font-serif">
+                FIRST NAME MEANS:{" "}
+                {`${genResult.names?.[0][1]}, ${genResult.names?.[0][2]}`}
+              </h5>
+            </div>
+            <div
+              className="my-2 p-3"
+              style={{
+                boxSizing: "border-box",
+                background: "#C8B6A6",
+                border: "5px solid #5E4529",
+                borderRadius: "20px",
+              }}
+            >
+              <h4 className="font-serif" style={{ fontSize: "48px" }}>
+                {genResult.names?.[1][0] ?? "‎"}
+              </h4>
+              <h5 className="font-serif">
+                FIRST NAME MEANS:{" "}
+                {`${genResult.names?.[1][1]}, ${genResult.names?.[1][2]}`}
+              </h5>
+            </div>
+            <div
+              className="my-2 p-3"
+              style={{
+                boxSizing: "border-box",
+                background: "#C8B6A6",
+                border: "5px solid #5E4529",
+                borderRadius: "20px",
+              }}
+            >
+              <h4 className="font-serif" style={{ fontSize: "48px" }}>
+                {genResult.names?.[2][0] ?? "‎"}
+              </h4>
+              <h5 className="font-serif">
+                FIRST NAME MEANS:{" "}
+                {`${genResult.names?.[2][1]}, ${genResult.names?.[2][2]}`}
+              </h5>
+            </div>
           </div>
         </div>
       </div>
