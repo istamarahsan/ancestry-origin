@@ -1,8 +1,17 @@
 {
-	"folders": [
-		{
-			"path": ".."
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "sqltools.connections": [
+      {
+        "previewLimit": 50,
+        "driver": "SQLite",
+        "name": "ancestry-origin-dev",
+        "database": "${workspaceFolder:ancestry-origin}/prisma/db.sqlite"
+      }
+    ]
+  }
 }
