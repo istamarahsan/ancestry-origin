@@ -32,7 +32,11 @@ type GenerationOptions = {
 }
 
 type GenerationResult = {
-  names?: [string, string, string]
+  names?: [
+    [string, string, string],
+    [string, string, string],
+    [string, string, string]
+  ]
 }
 
 function getRandomIntegerInRange(a: number, b: number): number {
@@ -54,6 +58,13 @@ function getRandomIntegerInRange(a: number, b: number): number {
 }
 
 const namePossibilities: string[] = ["Alfred", "Jason"]
+const meaningPossibilities: string[] = [
+  "brave",
+  "power",
+  "fight",
+  "duel",
+  "strength",
+]
 
 function getRandomName(): string {
   return (
@@ -61,6 +72,18 @@ function getRandomName(): string {
       getRandomIntegerInRange(0, namePossibilities.length - 1)
     ] ?? ""
   )
+}
+
+function getRandomMeaning(): string {
+  return (
+    meaningPossibilities[
+      getRandomIntegerInRange(0, meaningPossibilities.length - 1)
+    ] ?? ""
+  )
+}
+
+function getRandomResult(): [string, string, string] {
+  return [getRandomName(), getRandomMeaning(), getRandomMeaning()]
 }
 
 const CharacterNameGenerator: NextPage = () => {
@@ -108,7 +131,7 @@ const CharacterNameGenerator: NextPage = () => {
             const randomChoices = Math.floor(Math.random() * 10)
             setGenResult({
               ...genResult,
-              names: [getRandomName(), getRandomName(), getRandomName()],
+              names: [getRandomResult(), getRandomResult(), getRandomResult()],
             })
           }}
         >
@@ -165,9 +188,12 @@ const CharacterNameGenerator: NextPage = () => {
             }}
           >
             <h4 className="font-serif" style={{ fontSize: "48px" }}>
-              {genResult.names?.[0] ?? "‎"}
+              {genResult.names?.[0][0] ?? "‎"}
             </h4>
-            <h5 className="font-serif">FIRST NAME MEANS: BRAVE POWER</h5>
+            <h5 className="font-serif">
+              FIRST NAME MEANS:{" "}
+              {`${genResult.names?.[0][1]}, ${genResult.names?.[0][2]}`}
+            </h5>
           </div>
           <div
             className="my-2 p-3"
@@ -179,9 +205,12 @@ const CharacterNameGenerator: NextPage = () => {
             }}
           >
             <h4 className="font-serif" style={{ fontSize: "48px" }}>
-              {genResult.names?.[1] ?? "‎"}
+              {genResult.names?.[1][0] ?? "‎"}
             </h4>
-            <h5 className="font-serif">FIRST NAME MEANS: FIGHT, DUEL</h5>
+            <h5 className="font-serif">
+              FIRST NAME MEANS:{" "}
+              {`${genResult.names?.[1][1]}, ${genResult.names?.[1][2]}`}
+            </h5>
           </div>
           <div
             className="my-2 p-3"
@@ -193,9 +222,12 @@ const CharacterNameGenerator: NextPage = () => {
             }}
           >
             <h4 className="font-serif" style={{ fontSize: "48px" }}>
-              {genResult.names?.[2] ?? "‎"}
+              {genResult.names?.[2][0] ?? "‎"}
             </h4>
-            <h5 className="font-serif">FIRST NAME MEANS: STRENGTH, POWER</h5>
+            <h5 className="font-serif">
+              FIRST NAME MEANS:{" "}
+              {`${genResult.names?.[2][1]}, ${genResult.names?.[2][2]}`}
+            </h5>
           </div>
         </div>
       </div>
