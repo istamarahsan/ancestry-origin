@@ -68,9 +68,13 @@ const meaningPossibilities: string[] = [
 
 function getRandomName(): string {
   return (
-    namePossibilities[
+    (namePossibilities[
       getRandomIntegerInRange(0, namePossibilities.length - 1)
-    ] ?? ""
+    ] ?? "") +
+      " " +
+      namePossibilities[
+        getRandomIntegerInRange(0, namePossibilities.length - 1)
+      ] ?? ""
   )
 }
 
@@ -177,7 +181,7 @@ const CharacterNameGenerator: NextPage = () => {
         >
           CHARACTER NAME GENERATOR
         </h1>
-        <div className="flex flex-col">
+        <div className="flex w-full flex-col px-10">
           <div
             className="my-2 p-3"
             style={{
