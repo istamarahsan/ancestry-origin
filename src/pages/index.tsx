@@ -1,14 +1,14 @@
 import { NextPage } from "next"
-import Head from "next/head"
 
 type GeneratorLinkButtonProps = {
   text: string
-  onClick: () => void
+  href: string
 }
 
-const GeneratorLinkButton: React.FC<GeneratorLinkButtonProps> = (
-  props: GeneratorLinkButtonProps
-) => {
+const GeneratorLinkButton: React.FC<GeneratorLinkButtonProps> = ({
+  text,
+  href,
+}: GeneratorLinkButtonProps) => {
   return (
     <div
       className="flex place-content-center p-3"
@@ -19,9 +19,9 @@ const GeneratorLinkButton: React.FC<GeneratorLinkButtonProps> = (
         borderRadius: "20px",
       }}
     >
-      <button
+      <a
+        href={href}
         className="font-serif"
-        onClick={props.onClick}
         style={{
           fontSize: "48px",
           lineHeight: "61px",
@@ -29,8 +29,8 @@ const GeneratorLinkButton: React.FC<GeneratorLinkButtonProps> = (
           color: "#362715",
         }}
       >
-        {props.text.toUpperCase()}
-      </button>
+        {text.toUpperCase()}
+      </a>
     </div>
   )
 }
@@ -58,17 +58,11 @@ const Home: NextPage = () => {
         </h1>
         <div className="flex flex-col gap-10">
           <GeneratorLinkButton
-            onClick={() => {}}
+            href="/namegenerator"
             text="Old English"
           ></GeneratorLinkButton>
-          <GeneratorLinkButton
-            onClick={() => {}}
-            text="Old German"
-          ></GeneratorLinkButton>
-          <GeneratorLinkButton
-            onClick={() => {}}
-            text="Old Roman"
-          ></GeneratorLinkButton>
+          <GeneratorLinkButton href="" text="Old German"></GeneratorLinkButton>
+          <GeneratorLinkButton href="" text="Old Roman"></GeneratorLinkButton>
         </div>
       </div>
     </main>
