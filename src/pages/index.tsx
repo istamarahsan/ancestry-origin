@@ -61,8 +61,14 @@ const Home: NextPage = () => {
             href="/namegenerator"
             text="Old English"
           ></GeneratorLinkButton>
-          <GeneratorLinkButton href="" text="Old German"></GeneratorLinkButton>
-          <GeneratorLinkButton href="" text="Old Roman"></GeneratorLinkButton>
+          <GeneratorLinkButton
+            href="/namegenerator"
+            text="Old German"
+          ></GeneratorLinkButton>
+          <GeneratorLinkButton
+            href="/namegenerator"
+            text="Old Roman"
+          ></GeneratorLinkButton>
         </div>
       </div>
     </main>

@@ -1,7 +1,7 @@
 import { NextPage } from "next"
 import Image from "next/image"
 import { RadioGroup } from "@headlessui/react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 type GenderCheckBoxProps = {
   checked: boolean
@@ -90,6 +90,14 @@ function getRandomResult(): [string, string, string] {
   return [getRandomName(), getRandomMeaning(), getRandomMeaning()]
 }
 
+function getRandomGen(): [
+  [string, string, string],
+  [string, string, string],
+  [string, string, string]
+] {
+  return [getRandomResult(), getRandomResult(), getRandomResult()]
+}
+
 const CharacterNameGenerator: NextPage = () => {
   const [genOptions, setGenOptions] = useState<GenerationOptions>({
     gender: "random",
@@ -137,17 +145,12 @@ const CharacterNameGenerator: NextPage = () => {
               border: "5px solid #5E4529",
               borderRadius: "20px",
             }}
-            onClick={() => {
-              const randomChoices = Math.floor(Math.random() * 10)
+            onClick={() =>
               setGenResult({
                 ...genResult,
-                names: [
-                  getRandomResult(),
-                  getRandomResult(),
-                  getRandomResult(),
-                ],
+                names: getRandomGen(),
               })
-            }}
+            }
           >
             GENERATE NAME
           </button>
@@ -208,7 +211,9 @@ const CharacterNameGenerator: NextPage = () => {
               </h4>
               <h5 className="font-serif">
                 FIRST NAME MEANS:{" "}
-                {`${genResult.names?.[0][1]}, ${genResult.names?.[0][2]}`}
+                {`${genResult.names?.[0][1] ?? ""}, ${
+                  genResult.names?.[0][2] ?? ""
+                }`}
               </h5>
             </div>
             <div
@@ -225,7 +230,9 @@ const CharacterNameGenerator: NextPage = () => {
               </h4>
               <h5 className="font-serif">
                 FIRST NAME MEANS:{" "}
-                {`${genResult.names?.[1][1]}, ${genResult.names?.[1][2]}`}
+                {`${genResult.names?.[1][1] ?? ""}, ${
+                  genResult.names?.[1][2] ?? ""
+                }`}
               </h5>
             </div>
             <div
@@ -242,7 +249,9 @@ const CharacterNameGenerator: NextPage = () => {
               </h4>
               <h5 className="font-serif">
                 FIRST NAME MEANS:{" "}
-                {`${genResult.names?.[2][1]}, ${genResult.names?.[2][2]}`}
+                {`${genResult.names?.[2][1] ?? ""}, ${
+                  genResult.names?.[2][2] ?? ""
+                }`}
               </h5>
             </div>
           </div>
