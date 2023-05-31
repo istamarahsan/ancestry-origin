@@ -6,6 +6,7 @@ export default {
     extend: {
       fontFamily: {
         serif: ["IM Fell English SC"],
+        serifSub: ["Abhaya Libre"],
       },
     },
   },
