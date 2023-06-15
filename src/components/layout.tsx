@@ -6,7 +6,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <div className="flex h-24 place-content-between bg-slate-500">
+      {/* <div className="flex h-24 place-content-between bg-slate-500">
         <div className="flex place-items-center px-6 py-1 text-center font-serif text-6xl text-white">
           <h1>Ancestry Origin</h1>
         </div>
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         ) : (
           ""
         )}
-      </div>
+      </div> */}
       <main
         className="flex min-h-screen w-full flex-col"
         style={{

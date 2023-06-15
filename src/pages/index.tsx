@@ -57,18 +57,12 @@ const Home: NextPage = () => {
           ANCESTRY ORIGIN
         </h1>
         <div className="flex flex-col gap-10">
+          <GeneratorLinkButton href="/namegenerator" text="Name Generator" />
           <GeneratorLinkButton
-            href="/namegenerator"
-            text="Old English"
-          ></GeneratorLinkButton>
-          <GeneratorLinkButton
-            href="/namegenerator"
-            text="Old German"
-          ></GeneratorLinkButton>
-          <GeneratorLinkButton
-            href="/namegenerator"
-            text="Old Roman"
-          ></GeneratorLinkButton>
+            href="/charactergenerator"
+            text="Character Generator"
+          />
+          <GeneratorLinkButton href="/itemgenerator" text="Item Generator" />
         </div>
       </div>
     </main>
