@@ -1,5 +1,5 @@
 import { randomInt } from "crypto"
-import { Set } from "immutable"
+import { Map, Set } from "immutable"
 import lodash from "lodash"
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc"
@@ -399,9 +399,17 @@ const charDataStatic: CharacterBasicData[] = [
   },
 ].filter((c) => racesWithImages.contains(c.race))
 
+const detailsByLabel: Map<string, CharacterDetail[]> = detailsStatic.reduce<
+  Map<string, CharacterDetail[]>
+>((map, entry) => {
+  return map.set(entry.detail, [...map.get(entry.detail, []), entry])
+}, Map())
+
 export const generateRouter = createTRPCRouter({
   character: publicProcedure.query(async ({}) => {
-    const details = lodash.sampleSize(detailsStatic, randomInt(4, 6))
+    const details = lodash
+      .sampleSize(detailsByLabel.valueSeq().toArray(), randomInt(4, 6))
+      .map((details) => lodash.sample(details)!)
     const genResult: CharacterData = {
       ...lodash.sample(charDataStatic)!,
       details: details,
