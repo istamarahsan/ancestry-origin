@@ -3,7 +3,7 @@ import { type CreateNextContextOptions } from "@trpc/server/adapters/next"
 type CreateContextOptions = {}
 
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
-  return {}
+  return { db: prisma }
 }
 
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
@@ -13,6 +13,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
 import { initTRPC, TRPCError } from "@trpc/server"
 import superjson from "superjson"
 import { ZodError } from "zod"
+import { prisma } from "../db"
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,

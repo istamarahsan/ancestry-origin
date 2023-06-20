@@ -1,16 +1,49 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
-model Placeholder {
-    id   Int    @id @default(autoincrement())
-    name String
+model saved_character {
+  owner_email String @db.VarChar(255)
+  count       Int    @default(0)
+  first_name  String @db.VarChar(255)
+  last_name   String @db.VarChar(255)
+  gender      String @db.VarChar(255)
+  race        String @db.VarChar(255)
+  class       String @db.VarChar(255)
+  background  String @db.VarChar(255)
+  age         Int
+  image_id    String @db.VarChar(255)
+
+  @@id([owner_email, count])
+}
+
+model saved_character_detail {
+  count                 Int    @default(autoincrement()) @db.UnsignedInt
+  detail                String @db.VarChar(255)
+  description           String @db.Text
+  owner_email           String @db.VarChar(255)
+  owner_character_count Int
+
+  @@id([count, owner_email, owner_character_count])
+}
+
+model saved_item {
+  owner_email String @db.VarChar(255)
+  count       Int
+  name        String @db.VarChar(255)
+  kind        String @db.VarChar(255)
+  category    String @db.VarChar(255)
+  style       String @db.VarChar(255)
+  description String @db.Text
+  history     String @db.VarChar(255)
+  property    String @db.VarChar(255)
+  quirk       String @db.VarChar(255)
+  image_id    String @db.VarChar(255)
+
+  @@id([owner_email, count])
 }

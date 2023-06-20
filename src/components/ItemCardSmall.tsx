@@ -1,10 +1,11 @@
-import { type CharacterData } from "~/server/api/routers/generate"
+import { capitalize } from "lodash"
+import { type ItemData } from "~/server/api/routers/generate"
 
-type CharacterCardSmallProps = {
-  data: CharacterData
+type ItemCardSmallProps = {
+  data: ItemData
 }
 
-export default function CharacterCardSmall({ data }: CharacterCardSmallProps) {
+export default function ItemCardSmall({ data }: ItemCardSmallProps) {
   return (
     <div
       className="z-0 flex flex-col justify-start px-5 py-7 align-middle transition-transform"
@@ -21,7 +22,7 @@ export default function CharacterCardSmall({ data }: CharacterCardSmallProps) {
         src={data.imagePath}
         width={400}
         height={400}
-        alt="character portrait"
+        alt="item illustration"
         className="mb-1 w-full rounded-lg border-4"
         style={{
           width: "100%",
@@ -35,11 +36,9 @@ export default function CharacterCardSmall({ data }: CharacterCardSmallProps) {
         className="mt-1 flex flex-grow flex-col justify-start rounded-lg border-4 py-3 align-middle"
         style={{ borderColor: "#5C0404" }}
       >
-        <h2 className="text-1xl py-1 text-center">
-          {`${data.firstName}${data.lastName ? ` ${data.lastName}` : ""}`}
-        </h2>
+        <h2 className="text-1xl py-1 text-center text-sm">{`${data.name}`}</h2>
         <h3 className="px-2 text-center text-sm">
-          {`${data.race} ${data.class}`}
+          {`${capitalize(data.category)}`}
         </h3>
       </div>
     </div>
