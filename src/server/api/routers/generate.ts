@@ -637,9 +637,10 @@ export const generateRouter = createTRPCRouter({
     return genResult
   }),
   item: publicProcedure.query<ItemData>(async ({}) => {
+    const baseData = lodash.sample(itemsBasic)!
     return {
-      ...lodash.sample(itemsBasic)!,
-      imagePath: "/",
+      ...baseData,
+      imagePath: `/items/${baseData.name}.png`,
       history: lodash.sample(itemDetailsByLabel.History)!,
       property: lodash.sample(itemDetailsByLabel.Property)!,
       quirk: lodash.sample(itemDetailsByLabel.Quirk)!,
