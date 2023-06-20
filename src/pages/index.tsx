@@ -13,6 +13,8 @@ import { capitalize } from "lodash"
 import ItemCardSmall from "~/components/ItemCardSmall"
 import { signIn, useSession } from "next-auth/react"
 import { type SavedData } from "~/server/api/routers/saved"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 type CardAction = "discard" | "save"
 
@@ -136,11 +138,27 @@ const Generator: NextPage = () => {
   const [savedCards, setSavedCards] = useState<Map<number, SavedData>>(Map())
   const [selectedCardId, setSelectedCardId] = useState<number | undefined>()
   const { data: session, status: authStatus } = useSession()
+  const [isActionCooldown, setActionCooldown] = useState<boolean>(false)
 
   const [animateRef, _] = useAutoAnimate()
   const generateCharacterQuery = api.generate.character.useQuery()
   const generateItemQuery = api.generate.item.useQuery()
-  const saveToAccountMutation = api.saved.saveToUser.useMutation()
+  const saveToAccountMutation = api.saved.saveToUser.useMutation({
+    onSuccess(_data, _variables, _context) {
+      toast.success("Saved to account!", {
+        position: "bottom-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "colored",
+      })
+      setSavedCards(Map())
+    },
+  })
+
   const [generationMode, setGenerationMode] = useState<GenerationMode>({
     type: "character",
   })
@@ -156,7 +174,9 @@ const Generator: NextPage = () => {
   function handleCardAction(action: CardAction): void {
     if (
       generateCharacterQuery.data === undefined ||
-      generateItemQuery.data === undefined
+      generateItemQuery.data === undefined ||
+      generateCharacterQuery.fetchStatus !== "idle" ||
+      generateItemQuery.fetchStatus !== "idle"
     )
       return
     switch (action) {
@@ -185,6 +205,18 @@ const Generator: NextPage = () => {
 
   return (
     <RootLayout>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        limit={1}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        theme="colored"
+      />
       <div className="flex flex-col items-center py-4">
         <h1 className="mt-5 p-5 text-center font-serif text-5xl">
           ANCESTRY ORIGIN
@@ -247,7 +279,7 @@ const Generator: NextPage = () => {
               ) : (
                 <></>
               )}
-              <div className="flex w-full flex-row justify-center gap-5 py-4">
+              <div className={`flex w-full flex-row justify-center gap-5 py-4`}>
                 <button
                   className={`w-fit rounded-full border-4 bg-opacity-0 p-4 text-center text-5xl transition-opacity ${"opacity-100"}`}
                   style={{
@@ -291,9 +323,9 @@ const Generator: NextPage = () => {
               </div>
             </div>
           ) : (
-            <div className="flex max-w-7xl flex-col items-center justify-start gap-5">
-              <div className="flex flex-col-reverse lg:flex-row lg:flex-nowrap">
-                <div className="grid w-auto place-content-center">
+            <div className="flex max-w-7xl flex-col items-center justify-start gap-5 lg:w-[1024px]">
+              <div className="flex w-full flex-col-reverse lg:flex-row lg:flex-nowrap lg:justify-end">
+                <div className="grid w-auto grow place-content-center">
                   <ul
                     ref={animateRef}
                     className="col-span-2 flex flex-row flex-wrap items-start justify-center gap-4"
@@ -328,12 +360,12 @@ const Generator: NextPage = () => {
                       .toArray()}
                   </ul>
                 </div>
-                <div className="grid place-content-center">
+                <div className="flex flex-col items-center justify-start">
                   <div className="m-3 w-[350px]">
                     {selectedCard === undefined ? (
                       <></>
                     ) : (
-                      <div className="flex min-h-[500px] flex-col justify-between border-4 border-vanilla bg-[#E2D8CD]">
+                      <div className="flex h-full min-h-fit flex-col justify-between border-4 border-vanilla bg-[#E2D8CD]">
                         <h2 className="bg-vanilla p-3 text-center font-serif text-3xl">
                           INFORMATION
                         </h2>
@@ -464,6 +496,7 @@ const Generator: NextPage = () => {
                           signIn()
                           break
                         case "authenticated":
+                          if (savedCards.size === 0) return
                           saveToAccountMutation.mutate({
                             user: session.user?.email!,
                             characters: savedCards
