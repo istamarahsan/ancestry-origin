@@ -61,7 +61,7 @@ export const savedRouter = createTRPCRouter({
           },
         })
         const { count: upperCount } = _max
-        const startingCount = upperCount ? upperCount + 1 : 0
+        const startingCount = upperCount !== null ? upperCount + 1 : 0
         const labelled: [ItemValidated, number][] = input.items.map((el, i) => [
           el,
           i + startingCount,
@@ -88,11 +88,13 @@ export const savedRouter = createTRPCRouter({
             count: true,
           },
         })
+        console.log(JSON.stringify(_max, null, 2))
         const { count: upperCount } = _max
-        const startingCount = upperCount ? upperCount + 1 : 0
+        const startingCount = upperCount !== null ? upperCount + 1 : 0
         const labelled: [CharValidated, number][] = input.characters.map(
           (el, i) => [el, i + startingCount]
         )
+        console.log(JSON.stringify(labelled, null, 2))
         await ctx.db.saved_character.createMany({
           data: labelled.map<Prisma.saved_characterCreateManyInput>(
             ([el, count]) => ({
