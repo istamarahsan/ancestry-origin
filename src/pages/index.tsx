@@ -11,7 +11,7 @@ import { api } from "~/utils/api"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { capitalize } from "lodash"
 import ItemCardSmall from "~/components/ItemCardSmall"
-import { signIn, useSession } from "next-auth/react"
+import { signIn, signOut, useSession } from "next-auth/react"
 import { type SavedData } from "~/server/api/routers/saved"
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -221,6 +221,29 @@ const Generator: NextPage = () => {
         <h1 className="mt-5 p-5 text-center font-serif text-5xl">
           ANCESTRY ORIGIN
         </h1>
+        <div className="flex flex-row items-baseline gap-1">
+          {session?.user?.email ? (
+            <>
+              <h3>{`Logged in as ${session.user.email}.`}</h3>
+              <button
+                onClick={() => signOut()}
+                className="p-1 underline hover:text-blue-500"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <h3>Not logged in.</h3>
+              <button
+                onClick={() => signIn("google")}
+                className="p-1 underline hover:text-blue-500"
+              >
+                Sign In with Google
+              </button>
+            </>
+          )}
+        </div>
 
         <div className="my-5 grid w-[450px] min-w-fit grid-cols-2 rounded-2xl border-2 border-nightingale text-center text-lg">
           <button
@@ -527,13 +550,17 @@ const Generator: NextPage = () => {
                           break
                       }
                     }}
-                    className="font-serif text-3xl"
+                    className={`font-serif text-3xl ${
+                      savedCards.size === 0 ? "cursor-default opacity-50" : ""
+                    }`}
                     style={{
                       textAlign: "center",
                       color: "#362715",
                     }}
                   >
-                    {authStatus === "authenticated"
+                    {savedCards.size === 0
+                      ? "Add cards to save"
+                      : authStatus === "authenticated"
                       ? "Save to account"
                       : "Sign in to save ➡"}
                   </button>
