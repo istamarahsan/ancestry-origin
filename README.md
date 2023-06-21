@@ -1,3 +1,21 @@
+# Ancestry Origin
+Ancestry origin is a character and item generator for dungeon masters looking for some inspiration. 
+
+This prototype is built with Next, React, Prisma, Tailwin and TRPC, uses Planetscale's MySQL Platform and is deployed on Vercel (thanks Vercel, thanks Planetscale for the generous free tiers).
+
+The generation sources are static for this prototype.
+
+Made with 💜 by Kelompok 6.
+
+## Pages
+- / : Generator. Generate items and characters.
+- /me : Profile page. See what you've saved and export them. 
+extra
+- /namegenerator : Name generator from an earlier version.
+
+# Below this is T3 Stack stuff. Leaving it in because is very cool, overpowered stack, thanks Theo 👍🏻.
+
+---
 # Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
