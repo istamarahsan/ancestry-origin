@@ -4,7 +4,7 @@ import lodash from "lodash"
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc"
 
-type CharacterDetail = {
+export type CharacterDetail = {
   detail: string
   description: string
 }

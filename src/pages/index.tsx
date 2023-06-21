@@ -221,10 +221,13 @@ const Generator: NextPage = () => {
         <h1 className="mt-5 p-5 text-center font-serif text-5xl">
           ANCESTRY ORIGIN
         </h1>
-        <div className="flex flex-row items-baseline gap-1">
+        <div className="flex flex-row items-baseline justify-between gap-5">
           {session?.user?.email ? (
             <>
               <h3>{`Logged in as ${session.user.email}.`}</h3>
+              <a href="/me" className="underline hover:text-blue-500">
+                My Stuff
+              </a>
               <button
                 onClick={() => signOut()}
                 className="p-1 underline hover:text-blue-500"
@@ -239,7 +242,7 @@ const Generator: NextPage = () => {
                 onClick={() => signIn("google")}
                 className="p-1 underline hover:text-blue-500"
               >
-                Sign In with Google
+                Sign in with Google
               </button>
             </>
           )}

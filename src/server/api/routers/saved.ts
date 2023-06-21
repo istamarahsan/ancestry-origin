@@ -1,7 +1,8 @@
 import { z } from "zod"
 import { createTRPCRouter, publicProcedure } from "../trpc"
-import { CharacterData, ItemData } from "./generate"
-import { Prisma } from "@prisma/client"
+import { CharacterData, CharacterDetail, ItemData } from "./generate"
+import { Prisma, saved_character_detail } from "@prisma/client"
+import { List } from "immutable"
 
 export type SavedData =
   | { type: "character"; data: CharacterData }
@@ -40,10 +41,59 @@ type CharValidated = z.infer<typeof characterValidation>
 type ItemValidated = z.infer<typeof itemValidation>
 
 export const savedRouter = createTRPCRouter({
-  getForUser: publicProcedure
+  getSavedCharactersForUser: publicProcedure
     .input(z.string().email())
-    .query<SavedData[]>(({ ctx, input }) => {
-      return []
+    .query<CharacterData[]>(async ({ ctx, input }) => {
+      const characters = await ctx.db.saved_character.findMany({
+        where: { owner_email: input },
+      })
+      const details = await ctx.db.saved_character_detail.findMany({
+        where: { owner_email: input },
+      })
+      const detailsByCharacter = List(details).groupBy(
+        (el) => el.owner_character_count
+      )
+      return characters.map<CharacterData>((character) => ({
+        ...character,
+        imagePath: character.image_id,
+        details: detailsByCharacter
+          .get(character.count, List<saved_character_detail>())
+          .map<CharacterDetail>((el) => ({
+            detail: el.detail,
+            description: el.description,
+          }))
+          .toArray(),
+        firstName: character.first_name,
+        lastName: character.last_name,
+      }))
+    }),
+  getSavedItemsForUser: publicProcedure
+    .input(z.string().email())
+    .query<ItemData[]>(async ({ ctx, input }) => {
+      function parseItemCategory(category: string): ItemData["category"] {
+        switch (category) {
+          case "weapon":
+            return "weapon"
+          case "armor":
+            return "armor"
+          case "tool":
+            return "tool"
+          case "trinket":
+            return "trinket"
+          case "consumable":
+            return "consumable"
+          default:
+            return "weapon"
+        }
+      }
+      const items = await ctx.db.saved_item.findMany({
+        where: { owner_email: input },
+      })
+      return items.map<ItemData>((item) => ({
+        ...item,
+        imagePath: item.image_id,
+        category: parseItemCategory(item.category),
+      }))
     }),
   saveToUser: publicProcedure
     .input(
