@@ -10,11 +10,9 @@ Made with 💜 by Kelompok 6.
 ## Pages
 - / : Generator. Generate items and characters.
 - /me : Profile page. See what you've saved and export them. 
-extra
-- /namegenerator : Name generator from an earlier version.
+- (extra) /namegenerator : Name generator from an earlier version.
 
-# Below this is T3 Stack stuff. Leaving it in because is very cool, overpowered stack, thanks Theo 👍🏻.
-
+**Below this is T3 Stack stuff. Leaving it in because is very cool, overpowered stack, thanks Theo 👍🏻.**
 ---
 # Create T3 App
 
