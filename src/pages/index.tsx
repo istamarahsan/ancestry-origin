@@ -135,12 +135,14 @@ const ItemCardGen = ({ data }: ItemCardGenProps) => {
 
 const Generator: NextPage = () => {
   const [actionMode, setActionMode] = useState<ActionMode>("generate")
-  const [savedCards, setSavedCards] = useState<Map<number, SavedData>>(Map())
+  const [savedCards, setSavedCards] = useState<
+    Map<number, SavedData> | undefined
+  >(undefined)
   const [selectedCardId, setSelectedCardId] = useState<number | undefined>()
   const { data: session, status: authStatus } = useSession()
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (savedCards.size === 0) {
+      if (savedCards === undefined) {
         const saved = localStorage.getItem("savedCards")
         if (saved !== null) {
           const deserialized = Map(JSON.parse(saved)).mapKeys((k) =>
@@ -174,6 +176,7 @@ const Generator: NextPage = () => {
         progress: undefined,
         theme: "colored",
       })
+      localStorage.removeItem("savedCards")
       setSavedCards(Map())
     },
   })
@@ -183,10 +186,14 @@ const Generator: NextPage = () => {
   })
 
   const selectedCard = selectedCardId
-    ? savedCards.get(selectedCardId)
+    ? savedCards?.get(selectedCardId)
     : undefined
 
-  if (selectedCardId === undefined && savedCards.size > 0) {
+  if (
+    selectedCardId === undefined &&
+    savedCards !== undefined &&
+    savedCards?.size > 0
+  ) {
     setSelectedCardId(savedCards.keySeq().min())
   }
 
@@ -202,13 +209,16 @@ const Generator: NextPage = () => {
       case "discard":
         break
       case "save":
+        const key = (savedCards?.keySeq()?.max() ?? 0) + 1
+        const val: SavedData =
+          generationMode.type === "character"
+            ? { type: "character", data: generateCharacterQuery.data }
+            : { type: "item", data: generateItemQuery.data }
+
         setSavedCards(
-          savedCards.set(
-            (savedCards.keySeq().max() ?? 0) + 1,
-            generationMode.type === "character"
-              ? { type: "character", data: generateCharacterQuery.data }
-              : { type: "item", data: generateItemQuery.data }
-          )
+          savedCards !== undefined
+            ? savedCards.set(key, val)
+            : Map<number, SavedData>().set(key, val)
         )
         break
     }
@@ -282,7 +292,7 @@ const Generator: NextPage = () => {
             }`}
             onClick={() => setActionMode("manage")}
           >
-            {`(${savedCards.size}) Manage`}
+            {`(${savedCards?.size ?? 0}) Manage`}
           </button>
         </div>
 
@@ -375,7 +385,7 @@ const Generator: NextPage = () => {
                     ref={animateRef}
                     className="col-span-2 flex flex-row flex-wrap items-start justify-center gap-4"
                   >
-                    {savedCards
+                    {(savedCards ?? Map())
                       .entrySeq()
                       .map(([key, val]) => (
                         <li className={`relative transition-opacity`} key={key}>
@@ -468,6 +478,7 @@ const Generator: NextPage = () => {
                             className="col-span-2 w-4/5 rounded-lg border-2 border-nightingale bg-vanilla p-2 font-serif"
                             onClick={() => {
                               if (selectedCardId === undefined) return
+                              if (savedCards === undefined) return
                               setSavedCards(savedCards.delete(selectedCardId))
                               setSelectedCardId(undefined)
                             }}
@@ -493,7 +504,7 @@ const Generator: NextPage = () => {
                 >
                   <a
                     href={
-                      savedCards.size > 0
+                      savedCards !== undefined && savedCards.size > 0
                         ? `data:text/json;charset=utf-8,${encodeURIComponent(
                             JSON.stringify(
                               savedCards
@@ -515,7 +526,9 @@ const Generator: NextPage = () => {
                     }
                     download={"saved-characters.json"}
                     className={`font-serif text-4xl ${
-                      savedCards.size > 0 ? "" : "cursor-default opacity-50"
+                      savedCards !== undefined && savedCards.size > 0
+                        ? ""
+                        : "cursor-default opacity-50"
                     }`}
                     style={{
                       textAlign: "center",
@@ -541,7 +554,8 @@ const Generator: NextPage = () => {
                           signIn("google")
                           break
                         case "authenticated":
-                          if (savedCards.size === 0) return
+                          if (savedCards === undefined || savedCards.size === 0)
+                            return
                           saveToAccountMutation.mutate({
                             user: session.user?.email!,
                             characters: savedCards
@@ -569,18 +583,21 @@ const Generator: NextPage = () => {
                               )
                               .toArray(),
                           })
+                          setSavedCards(Map())
                           break
                       }
                     }}
                     className={`font-serif text-3xl ${
-                      savedCards.size === 0 ? "cursor-default opacity-50" : ""
+                      savedCards === undefined || savedCards.size === 0
+                        ? "cursor-default opacity-50"
+                        : ""
                     }`}
                     style={{
                       textAlign: "center",
                       color: "#362715",
                     }}
                   >
-                    {savedCards.size === 0
+                    {savedCards === undefined || savedCards.size === 0
                       ? "Add cards to save"
                       : authStatus === "authenticated"
                       ? "Save to account"

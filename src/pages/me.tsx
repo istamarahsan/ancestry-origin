@@ -4,7 +4,6 @@ import RootLayout from "~/components/layout"
 import Image from "next/image"
 import { Disclosure, Transition } from "@headlessui/react"
 import { api } from "~/utils/api"
-import { useState } from "react"
 import CharacterCardSmall from "~/components/CharacterCardSmall"
 import ItemCardSmall from "~/components/ItemCardSmall"
 import { List } from "immutable"
@@ -125,7 +124,7 @@ const Me: NextPage = () => {
                         <ul className="flex flex-row flex-wrap justify-start">
                           {getSavedCharactersQuery.data.length > 0 ? (
                             getSavedCharactersQuery.data.map((character, i) => (
-                              <li className="px-2" key={i}>
+                              <li className="p-2" key={i}>
                                 <CharacterCardSmall data={character} />
                               </li>
                             ))
@@ -157,10 +156,10 @@ const Me: NextPage = () => {
                   >
                     <Disclosure.Panel className="px-4 pb-2 pt-4">
                       {getSavedItemsQuery.status === "success" ? (
-                        <ul className="flex flex-col">
+                        <ul className="flex flex-row flex-wrap justify-start">
                           {getSavedItemsQuery.data.length > 0 ? (
                             getSavedItemsQuery.data.map((item, i) => (
-                              <li className="px-2" key={i}>
+                              <li className="p-2" key={i}>
                                 <ItemCardSmall data={item} />
                               </li>
                             ))
