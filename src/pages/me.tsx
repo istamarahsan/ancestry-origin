@@ -7,6 +7,8 @@ import { api } from "~/utils/api"
 import { useState } from "react"
 import CharacterCardSmall from "~/components/CharacterCardSmall"
 import ItemCardSmall from "~/components/ItemCardSmall"
+import { List } from "immutable"
+import { SavedData } from "~/server/api/routers/saved"
 
 const Me: NextPage = () => {
   const { data: session, status: authStatus } = useSession()
@@ -16,6 +18,20 @@ const Me: NextPage = () => {
   const getSavedItemsQuery = api.saved.getSavedItemsForUser.useQuery(
     session?.user?.email ?? ""
   )
+  const savedCards =
+    getSavedCharactersQuery.data !== undefined &&
+    getSavedItemsQuery.data !== undefined
+      ? List<SavedData>([
+          ...getSavedCharactersQuery.data.map<SavedData>((data) => ({
+            type: "character",
+            data: data,
+          })),
+          ...getSavedItemsQuery.data.map<SavedData>((data) => ({
+            type: "item",
+            data: data,
+          })),
+        ])
+      : List([])
   if (authStatus === "loading") {
     return (
       <RootLayout>
@@ -24,7 +40,7 @@ const Me: NextPage = () => {
     )
   }
   if (authStatus === "unauthenticated") {
-    signIn()
+    signIn("google")
   }
 
   return (
@@ -39,15 +55,54 @@ const Me: NextPage = () => {
             alt="profile image"
           />
           <h1 className="font-sans text-xl">{session?.user?.email ?? ""}</h1>
-          <button
-            onClick={() =>
-              signOut({
-                callbackUrl: "/",
-              })
+          <div className="flex flex-row items-center justify-center gap-5">
+            <a href="/" className="p-1 hover:text-blue-500 hover:underline">
+              Back
+            </a>
+
+            <button
+              className="p-1 hover:text-blue-500 hover:underline"
+              onClick={() =>
+                signOut({
+                  callbackUrl: "/",
+                })
+              }
+            >
+              Sign Out
+            </button>
+          </div>
+          <a
+            href={
+              savedCards.size > 0
+                ? `data:text/json;charset=utf-8,${encodeURIComponent(
+                    JSON.stringify(
+                      savedCards
+                        .groupBy((data) => data.type)
+                        .map((data) =>
+                          data.map((d) => ({
+                            ...d.data,
+                            type: undefined,
+                            imagePath: undefined,
+                          }))
+                        )
+                        .toObject(),
+                      null,
+                      2
+                    )
+                  )}`
+                : undefined
             }
+            download={"saved-characters.json"}
+            className={`font-serif text-4xl ${
+              savedCards.size > 0 ? "" : "cursor-default opacity-50"
+            }`}
+            style={{
+              textAlign: "center",
+              color: "#362715",
+            }}
           >
-            Sign Out
-          </button>
+            Export
+          </a>
         </div>
         <div className="grid w-full max-w-6xl grid-cols-2 place-content-center px-10">
           <div className="col-span-2">
