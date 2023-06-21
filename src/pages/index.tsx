@@ -1,6 +1,6 @@
 import { NextPage } from "next"
 import RootLayout from "~/components/layout"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Map } from "immutable"
 import CharacterCardSmall from "~/components/CharacterCardSmall"
 import {
@@ -9,7 +9,7 @@ import {
 } from "../server/api/routers/generate"
 import { api } from "~/utils/api"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
-import { capitalize } from "lodash"
+import { capitalize, toNumber } from "lodash"
 import ItemCardSmall from "~/components/ItemCardSmall"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { type SavedData } from "~/server/api/routers/saved"
@@ -138,7 +138,26 @@ const Generator: NextPage = () => {
   const [savedCards, setSavedCards] = useState<Map<number, SavedData>>(Map())
   const [selectedCardId, setSelectedCardId] = useState<number | undefined>()
   const { data: session, status: authStatus } = useSession()
-  const [isActionCooldown, setActionCooldown] = useState<boolean>(false)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (savedCards.size === 0) {
+        const saved = localStorage.getItem("savedCards")
+        if (saved !== null) {
+          const deserialized = Map(JSON.parse(saved)).mapKeys((k) =>
+            toNumber(k)
+          ) as Map<number, SavedData>
+          if (deserialized.size > 0) {
+            setSavedCards(deserialized)
+          }
+        }
+      } else {
+        localStorage.setItem(
+          "savedCards",
+          JSON.stringify(savedCards.toObject())
+        )
+      }
+    }
+  }, [savedCards])
 
   const [animateRef, _] = useAutoAnimate()
   const generateCharacterQuery = api.generate.character.useQuery()
@@ -519,7 +538,7 @@ const Generator: NextPage = () => {
                     onClick={() => {
                       switch (authStatus) {
                         case "unauthenticated":
-                          signIn()
+                          signIn("google")
                           break
                         case "authenticated":
                           if (savedCards.size === 0) return
