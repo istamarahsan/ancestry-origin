@@ -549,6 +549,7 @@ const Generator: NextPage = () => {
                 >
                   <button
                     onClick={() => {
+                      if (saveToAccountMutation.isLoading) return
                       switch (authStatus) {
                         case "unauthenticated":
                           signIn("google")
@@ -583,7 +584,6 @@ const Generator: NextPage = () => {
                               )
                               .toArray(),
                           })
-                          setSavedCards(Map())
                           break
                       }
                     }}
