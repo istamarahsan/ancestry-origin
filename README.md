@@ -5,7 +5,12 @@ This prototype is built with Next, React, Prisma, Tailwin and TRPC, uses Planets
 
 The generation sources are static for this prototype.
 
-Made with 💜 by Kelompok 6.
+Made with 💜 by Kelompok 6:
+- Ahsan Imam Istamar
+- Audrey Calista Anwar
+- Muhammad Abiyyu'Ammaar
+- Muhammad Rakha Athaillah
+- Rika Marta Amalia
 
 ## Pages
 - / : Generator. Generate items and characters.
